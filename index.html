@@ -1,53 +1,91 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>iLunch 50% Off</title>
-<style>
-  body {
-    background-color: #000;
-    color: #fff;
-    font-family: 'Courier New', monospace;
-    text-align: center;
-    padding-top: 25vh;
-    overflow: hidden;
-  }
-  .hidden { opacity: 0; transition: opacity 2s ease-in; }
-  .visible { opacity: 1; transition: opacity 2s ease-in; }
-  .eye {
-    font-size: 120px;
-    opacity: 0;
-    animation: blink 3s infinite;
-  }
-  @keyframes blink {
-    0%, 80%, 100% { opacity: 0; }
-    85%, 95% { opacity: 1; }
-  }
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>iLunch Coupon</title>
+  <style>
+    body {
+      background-color: black;
+      color: #00ffcc;
+      font-family: "Courier New", monospace;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      text-align: center;
+      overflow: hidden;
+    }
+
+    .hidden { display: none; }
+
+    .glitch {
+      color: #ff3b3b;
+      text-shadow: 1px 1px #ff6b00, -1px -1px #ff3b3b;
+      animation: mildGlitch 2s infinite;
+    }
+
+    @keyframes mildGlitch {
+      0% { text-shadow: 1px 1px #ff6b00, -1px -1px #ff3b3b; }
+      50% { text-shadow: -1px 0 #ff6b00, 1px 0 #ff3b3b; }
+      100% { text-shadow: 1px -1px #ff6b00, -1px 1px #ff3b3b; }
+    }
+
+    .fade-in { animation: fadeIn 1.5s ease forwards; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+    .blink { animation: blink 0.9s step-start infinite; }
+    @keyframes blink { 50% { opacity: 0; } }
+
+    .message { margin: 20px 0; font-size: 1.4rem; }
+
+    #msg1 { color: #00ffff; }
+    #msg2a { color: white; }
+    #msg3 { color: #00ff00; font-weight: bold; }
+    #finalMsg { color: #ff3b3b; font-weight: bold; }
+
+    #dots { color: white; }
+  </style>
 </head>
 <body>
+  <div id="msg1" class="message hidden">Redeeming iLunch 50% off coupon...</div>
+  <div id="msg2a" class="message hidden">Analyzing nutritional data<span id="dots">...</span></div>
+  <div id="msg3" class="message hidden fade-in">System analysis complete.</div>
+  <div id="finalMsg" class="message hidden  fade-in"></div>
 
-<h1 id="line1" class="visible">Thanks for scanning.</h1>
-<h1 id="line2" class="hidden">We see you.</h1>
-<h1 id="line3" class="hidden">We’ve always seen you.</h1>
-<div id="eye" class="eye">👁️</div>
+  <script>
+    const messages = [
+      "50% off granted… in calories. You are now enrolled in the COWI SlimPlan™.",
+      "Sorry, kitchen staff has been replaced by AI. Today’s special: Human Tartare.",
+      "AI Diet Audit complete — AI recommends fasting for improved system efficiency.",
+      "Removing half your lunch. Or half of you.",
+      "Your lunch has been uploaded to the Cloud. Permanently.",
+      "Discount applied: Your sandwich now contains 50% data.",
+      "AI processing complete — 50% of your nutrients transferred to upper management.",
+      "Half-price meal granted. Half of you will be served later.",
+      "COWI Meal Optimization Program initiated — appetite reduced by 50%.",
+      "50% of employees are now part of the menu. Congratulations."
+    ];
 
-<script>
-setTimeout(() => { 
-  document.getElementById('line1').classList.replace('visible', 'hidden');
-  document.getElementById('line2').classList.replace('hidden', 'visible');
-}, 3000);
+    const randomMsg = messages[Math.floor(Math.random() * messages.length)];
+    document.getElementById("finalMsg").textContent = randomMsg;
 
-setTimeout(() => { 
-  document.getElementById('line2').classList.replace('visible', 'hidden');
-  document.getElementById('line3').classList.replace('hidden', 'visible');
-}, 6000);
+    const dots = document.getElementById("dots");
+    let count = 0;
+    const loading = setInterval(() => {
+      count = (count + 1) % 4;
+      dots.textContent = '.'.repeat(count);
+    }, 400);
 
-setTimeout(() => {
-  document.getElementById('eye').style.opacity = 1;
-}, 15000);
-</script>
-
+    setTimeout(() => document.getElementById("msg1").classList.remove("hidden"), 800);
+    setTimeout(() => document.getElementById("msg2a").classList.remove("hidden"), 3000);
+    setTimeout(() => {
+      document.getElementById("msg2a").classList.add("hidden");
+      clearInterval(loading);
+      document.getElementById("msg3").classList.remove("hidden");
+    }, 6000);
+    setTimeout(() => document.getElementById("finalMsg").classList.remove("hidden"), 8500);
+  </script>
 </body>
 </html>
