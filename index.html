@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>iLunch Coupon</title>
+  <title>COWI iLunch Coupon</title>
   <style>
     body {
-      background-color: black;
-      color: #00ffcc;
+      background-color: #231f20; /* near-black background */
+      color: #ebe5da; /* Warm Grey 1 default */
       font-family: "Courier New", monospace;
       display: flex;
       flex-direction: column;
@@ -19,73 +19,94 @@
     }
 
     .hidden { display: none; }
-
-    .glitch {
-      color: #ff3b3b;
-      text-shadow: 1px 1px #ff6b00, -1px -1px #ff3b3b;
-      animation: mildGlitch 2s infinite;
-    }
-
-    @keyframes mildGlitch {
-      0% { text-shadow: 1px 1px #ff6b00, -1px -1px #ff3b3b; }
-      50% { text-shadow: -1px 0 #ff6b00, 1px 0 #ff3b3b; }
-      100% { text-shadow: 1px -1px #ff6b00, -1px 1px #ff3b3b; }
-    }
-
-    .fade-in { animation: fadeIn 1.5s ease forwards; }
-    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
-    .blink { animation: blink 0.9s step-start infinite; }
-    @keyframes blink { 50% { opacity: 0; } }
-
     .message { margin: 20px 0; font-size: 1.4rem; }
 
-    #msg1 { color: #00ffff; }
-    #msg2a { color: white; }
-    #msg3 { color: #00ff00; font-weight: bold; }
-    #finalMsg { color: #ff3b3b; font-weight: bold; }
+    /* Smooth fade-ins */
+    .fade-in { animation: fadeIn 1.2s ease forwards; opacity:0; }
+    @keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
 
-    #dots { color: white; }
+    /* Blinking for loading effect */
+    .blink { animation: blink 0.8s step-start infinite; }
+    @keyframes blink { 50% { opacity: 0; } }
+
+    /* Colors following COWI palette */
+    .stage1 { color: #d0c7bd; } /* Warm Grey 3 */
+    .stage2 { color: #b0a49a; } /* Warm Grey 5 */
+    .complete { color: #00ff66; font-weight: bold; } /* green confirmation */
+    .final { color: #F04E23; font-weight: bold; } /* COWI orange for final line */
+    #dots { color: #d0c7bd; }
   </style>
 </head>
 <body>
-  <div id="msg1" class="message hidden">Redeeming iLunch 50% off coupon...</div>
-  <div id="msg2a" class="message hidden">Analyzing nutritional data<span id="dots">...</span></div>
-  <div id="msg3" class="message hidden fade-in">System analysis complete.</div>
-  <div id="finalMsg" class="message hidden  fade-in"></div>
+  <div id="msg1" class="message hidden stage1">Redeeming iLunch 50% off<span id="dots1">...</span></div>
+  <div id="msg2" class="message hidden stage2">Scanning your dietary records…<span id="dots2">...</span></div>
+  <div id="scanComplete" class="message hidden complete fade-in">✔ Scan complete</div>
+  <div id="finalMsg" class="message hidden final fade-in"></div>
 
   <script>
     const messages = [
       "50% off granted… in calories. You are now enrolled in the COWI SlimPlan™.",
-      "Sorry, kitchen staff has been replaced by AI. Today’s special: Human Tartare.",
-      "AI Diet Audit complete — AI recommends fasting for improved system efficiency.",
-      "Removing half your lunch. Or half of you.",
-      "Your lunch has been uploaded to the Cloud. Permanently.",
+      "Kitchen staff has been replaced by COWI AI. Today’s special: Human Tartare — 50% lean meat.",
+      "Discount confirmed — 50% fewer bites authorized.",
+      "Processing discount... removing half your lunch.",
+      "Your lunch has been uploaded to the Cloud — 50% of it was lost in transmission.",
       "Discount applied: Your sandwich now contains 50% data.",
       "AI processing complete — 50% of your nutrients transferred to upper management.",
       "Half-price meal granted. Half of you will be served later.",
       "COWI Meal Optimization Program initiated — appetite reduced by 50%.",
-      "50% of employees are now part of the menu. Congratulations."
+      "50% of employees are now part of the menu. Congratulations.",
+      "Half your lunch has been reallocated to upper management.",
+      "AI upgrade applied — you’ll only need to eat 50% as much from now on.",
+      "System efficiency mode active: hunger reduced by 50%.",
+      "COWI Wellness Protocol v2.0: You now consume half. AI consumes the rest."
     ];
 
     const randomMsg = messages[Math.floor(Math.random() * messages.length)];
-    document.getElementById("finalMsg").textContent = randomMsg;
+    const msg1 = document.getElementById("msg1");
+    const msg2 = document.getElementById("msg2");
+    const scanComplete = document.getElementById("scanComplete");
+    const finalMsg = document.getElementById("finalMsg");
+    finalMsg.textContent = randomMsg;
 
-    const dots = document.getElementById("dots");
-    let count = 0;
-    const loading = setInterval(() => {
-      count = (count + 1) % 4;
-      dots.textContent = '.'.repeat(count);
-    }, 400);
+    // Create separate blinking dots for each stage
+    const dots1 = document.getElementById("dots1");
+    const dots2 = document.getElementById("dots2");
 
-    setTimeout(() => document.getElementById("msg1").classList.remove("hidden"), 800);
-    setTimeout(() => document.getElementById("msg2a").classList.remove("hidden"), 3000);
+    let count1 = 0, count2 = 0;
+    let interval1, interval2;
+
+    // Step 1: show msg1
     setTimeout(() => {
-      document.getElementById("msg2a").classList.add("hidden");
-      clearInterval(loading);
-      document.getElementById("msg3").classList.remove("hidden");
+      msg1.classList.remove("hidden");
+      interval1 = setInterval(() => {
+        count1 = (count1 + 1) % 4;
+        dots1.textContent = '.'.repeat(count1);
+      }, 400);
+    }, 800);
+
+    // Step 2: hide msg1, show msg2
+    setTimeout(() => {
+      msg1.classList.add("hidden");
+      clearInterval(interval1);
+      msg2.classList.remove("hidden");
+      interval2 = setInterval(() => {
+        count2 = (count2 + 1) % 4;
+        dots2.textContent = '.'.repeat(count2);
+      }, 400);
+    }, 3000);
+
+    // Step 3: hide msg2, show green "Scan complete"
+    setTimeout(() => {
+      msg2.classList.add("hidden");
+      clearInterval(interval2);
+      scanComplete.classList.remove("hidden");
     }, 6000);
-    setTimeout(() => document.getElementById("finalMsg").classList.remove("hidden"), 8500);
+
+    // Step 4: hide "Scan complete" and show final message
+    setTimeout(() => {
+      scanComplete.classList.add("hidden");
+      finalMsg.classList.remove("hidden");
+    }, 8500);
   </script>
 </body>
 </html>
