@@ -15,7 +15,8 @@
       align-items: center;
       height: 100vh;
       text-align: center;
-      overflow: hidden;
+      overflow-y: auto; /* allow scroll/pull refresh on mobile */
+      -webkit-overflow-scrolling: touch; /* smooth scrolling on iOS */
     }
 
     .hidden { display: none; }
@@ -34,7 +35,13 @@
     .stage2 { color: #b0a49a; } /* Warm Grey 5 */
     .complete { color: #00ff66; font-weight: bold; } /* green confirmation */
     .final { color: #F04E23; font-weight: bold; } /* COWI orange for final line */
-    #dots { color: #d0c7bd; }
+
+    /* Fix dots width so text doesn't shift */
+    #dots1, #dots2 {
+      display: inline-block;
+      width: 3ch; /* reserve space for 3 dots max */
+      text-align: left;
+    }
   </style>
 </head>
 <body>
@@ -109,11 +116,3 @@
   </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
